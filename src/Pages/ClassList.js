@@ -1,4 +1,3 @@
-import { async } from "q";
 import React, { useEffect, useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { getAllSubject } from "../Services/Subject.service";
@@ -18,6 +17,7 @@ export default function ClassList() {
     console.log("🚀 ========= result:", result?.data);
     setClassList(result?.data);
   };
+
   useEffect(() => {
     getSubjectList();
     getClassList();

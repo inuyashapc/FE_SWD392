@@ -1,5 +1,4 @@
 import axios from "axios";
-import { async } from "q";
 
 const API_BASE = "http://localhost:8080/classes";
 const getAllClass = async () => {
