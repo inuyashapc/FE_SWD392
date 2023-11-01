@@ -7,6 +7,8 @@ import CreateClass from "./Pages/CreateClass";
 import SubjectList from "./Pages/SubjectList";
 import "react-toastify/dist/ReactToastify.css";
 import ClassDetail from "./Pages/ClassDetail";
+import IssueList from "./Pages/Issues/IssueList.js"
+import NewIssue from "./Pages/Issues/NewIssue.js";
 function App() {
   return (
     <Router>
@@ -16,6 +18,8 @@ function App() {
         <Route path="/classList" element={<ClassList />}></Route>
         <Route path="/classList/create" element={<CreateClass />}></Route>
         <Route path="/classList/:id" element={<ClassDetail />}></Route>
+        <Route path="/issue" element={<IssueList />}></Route>
+        <Route path="/issue/create" element={<NewIssue />}></Route>
       </Routes>
       <ToastContainer />
     </Router>
