@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { getAllSubject } from "../Services/Subject.service";
 import { getAllTeacher } from "../Services/User.service";
 import { getAllSemester } from "../Services/Semester.service";
-import { createClass } from "../Services/Class.service";
+import { createClass, getClassDetail } from "../Services/Class.service";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
-export default function CreateClass() {
+export default function ClassDetail() {
   const [subjectList, setSubjectList] = useState();
   const [teacherList, setTeacherList] = useState();
   const [semesterList, setSemesterList] = useState();
+  const [classDetail, setClassDetail] = useState();
   const [formData, setFormData] = useState({
     class_name: "",
     subject_id: "",
@@ -16,7 +18,8 @@ export default function CreateClass() {
     semester_id: "",
   });
   console.log("🚀 ========= formData:", formData);
-
+  const { id } = useParams();
+  console.log("🚀 ========= id:", id);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -35,10 +38,21 @@ export default function CreateClass() {
     const result = await getAllSemester();
     setSemesterList(result?.data);
   };
+
+  const getClassDetailById = async () => {
+    try {
+      const result = await getClassDetail(id);
+      console.log("🚀 ========= result1234:", result?.data);
+      setClassDetail(result?.data);
+    } catch (error) {
+      console.log("🚀 ========= error:", error);
+    }
+  };
   useEffect(() => {
     getSubjectList();
     getTeacherList();
     getSemesterList();
+    getClassDetailById();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -52,14 +66,14 @@ export default function CreateClass() {
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">
-          Class name
+          Class Detail
         </label>
         <input
           type="text"
           className="form-control"
           id="class_name"
           name="class_name"
-          value={formData.class_name}
+          defaultValue={classDetail?.class_name}
           onChange={handleInputChange}
         />
       </div>
@@ -71,11 +85,12 @@ export default function CreateClass() {
           onChange={handleInputChange}
           required
         >
-          <option value="" className="btn btn-primary">
-            Subject
-          </option>
           {subjectList?.map((subject) => (
-            <option key={subject?.subject_id} value={subject?.subject_id}>
+            <option
+              defaultValue={classDetail?.Subject?.subject_code}
+              key={subject?.subject_id}
+              value={subject?.subject_id}
+            >
               {subject?.subject_code}
             </option>
           ))}
@@ -89,11 +104,12 @@ export default function CreateClass() {
           onChange={handleInputChange}
           required
         >
-          <option value="" className="btn btn-primary">
-            Choose Teacher
-          </option>
           {teacherList?.map((teacher) => (
-            <option key={teacher?.user_id} value={teacher?.user_id}>
+            <option
+              defaultValue={classDetail?.Teacher?.full_name}
+              key={teacher?.user_id}
+              value={teacher?.user_id}
+            >
               {teacher?.full_name}
             </option>
           ))}
@@ -101,24 +117,20 @@ export default function CreateClass() {
       </div>
       <div className="form-group">
         <label>Semester</label>
-        <select
-          name="semester_id"
-          value={formData.semester_id}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="" className="btn btn-primary">
-            Choose Semester
-          </option>
+        <select name="semester_id" onChange={handleInputChange} required>
           {semesterList?.map((semester) => (
-            <option key={semester?.semester_id} value={semester?.semester_id}>
-              {semester?.semester_name}
+            <option
+              defaultValue={classDetail?.Semester?.semester_id}
+              key={semester?.semester_id}
+              value={semester?.semester_id}
+            >
+              {semester?.semester_id}
             </option>
           ))}
         </select>
       </div>
       <button type="submit" className="btn btn-primary">
-        Submit
+        Update
       </button>
     </form>
   );

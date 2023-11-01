@@ -20,4 +20,13 @@ const createClass = async (formData) => {
   }
 };
 
-export { getAllClass, createClass };
+const getClassDetail = async (id) => {
+  try {
+    const result = await axios.get(`${API_BASE}/${id}`);
+    console.log("🚀 ========= result1111:", result);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
+export { getAllClass, createClass, getClassDetail };

@@ -85,7 +85,7 @@ export default function ClassList() {
               </td>
               <td>{item?.Subject?.subject_code}</td>
               <td>{dayjs(item?.created_at).format("DD-MM-YYYY")}</td>
-              <td>{item?.semester_id}</td>
+              <td>{item?.Semester?.semester_name}</td>
               <td>{item?.Teacher?.full_name}</td>
             </tr>
           ))}
