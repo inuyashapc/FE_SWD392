@@ -72,6 +72,7 @@ const updateSubject = async (data)=>{
     console.log("🚀 ========= error:", error);
   }
 }
+
 export {
   getAllSubject,
   changeActiveSubject,
