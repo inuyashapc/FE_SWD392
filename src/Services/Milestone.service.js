@@ -1,4 +1,5 @@
 import axios from "axios";
+import { async } from "q";
 
 const API_BASE = "http://localhost:8080/milestones";
 const getAllMilestone = async () => {
@@ -19,4 +20,15 @@ const getAllMilestoneById = async (id) => {
     console.log("🚀 ========= error:", error);
   }
 };
-export { getAllMilestone, getAllMilestoneById };
+
+const getDetailMilestone = async (id) => {
+  try {
+    const result = await axios.get(`${API_BASE}/${id}`);
+    console.log("api", `${API_BASE}/${id}`);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
+
+export { getAllMilestone, getAllMilestoneById, getDetailMilestone };

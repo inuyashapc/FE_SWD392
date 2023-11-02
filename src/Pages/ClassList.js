@@ -47,32 +47,9 @@ export default function ClassList() {
           Search
         </button>
       </div>
-      <div className="d-flex justify-content-around">
-        <div className="d-flex align-items-center">
-          <h6 className="mr-2">Semester</h6>
-          <DropdownButton id="dropdown-basic-button" title="Semester">
-            {subjectList?.map((subject) => (
-              <Dropdown.Item key={subject?.subject_id} href="#/action-1">
-                {subject?.subject_code}
-              </Dropdown.Item>
-            ))}
-          </DropdownButton>
-        </div>
-        <div className="d-flex align-items-center">
-          <h6 className="mr-2">Major</h6>
-          <DropdownButton id="dropdown-basic-button" title="Major">
-            <Dropdown.Item href="#/action-1">Action 1</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Action 2</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Action 3</Dropdown.Item>
-          </DropdownButton>
-        </div>
-        <div>
-          <Link to={"create"} className="btn btn-primary">
-            Create class
-          </Link>
-        </div>
-      </div>
-
+      <Link to={"create"} className="btn btn-primary">
+        Create class
+      </Link>
       <table className="table">
         <thead>
           <tr>
