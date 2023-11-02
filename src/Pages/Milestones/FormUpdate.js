@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllSubject } from "../../Services/Subject.service";
+import { getAllSubjects } from "../../Services/Subject.service";
 import { getAllTeacher } from "../../Services/User.service";
 import { getAllSemester } from "../../Services/Semester.service";
 import { getClassDetail, updateClass } from "../../Services/Class.service";
@@ -18,8 +18,8 @@ export default function FormUpdate({ id }) {
   };
 
   const getSubjectList = async () => {
-    const result = await getAllSubject();
-    setSubjectList(result?.data);
+    const result = await getAllSubjects();
+    setSubjectList(result);
   };
 
   const getTeacherList = async () => {

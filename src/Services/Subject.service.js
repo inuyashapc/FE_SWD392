@@ -65,10 +65,19 @@ const softDeleteSubject = async (subject_id, sortColumn, sortOrder) => {
   }
 };
 
+const getAllSubjects = async () => {
+  try {
+    const result = await axios.get(`${API_BASE}/all`);
+    return result.data;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
 export {
   getAllSubject,
   changeActiveSubject,
   softDeleteSubject,
   createNewSubject,
   getSubjectById,
+  getAllSubjects,
 };
