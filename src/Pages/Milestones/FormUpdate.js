@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getAllSubject } from "../Services/Subject.service";
-import { getAllTeacher } from "../Services/User.service";
-import { getAllSemester } from "../Services/Semester.service";
-import { createClass } from "../Services/Class.service";
+import { getAllSubject } from "../../Services/Subject.service";
+import { getAllTeacher } from "../../Services/User.service";
+import { getAllSemester } from "../../Services/Semester.service";
+import { getClassDetail, updateClass } from "../../Services/Class.service";
 import { toast } from "react-toastify";
-
-export default function CreateClass() {
+export default function FormUpdate({ id }) {
   const [subjectList, setSubjectList] = useState();
   const [teacherList, setTeacherList] = useState();
   const [semesterList, setSemesterList] = useState();
-  const [formData, setFormData] = useState({
-    class_name: "",
-    subject_id: "",
-    teacher_id: "",
-    semester_id: "",
-  });
+  const [classDetail, setClassDetail] = useState();
+  const [formData, setFormData] = useState();
   console.log("🚀 ========= formData:", formData);
 
   const handleInputChange = (e) => {
@@ -26,40 +21,55 @@ export default function CreateClass() {
     const result = await getAllSubject();
     setSubjectList(result?.data);
   };
+
   const getTeacherList = async () => {
     const result = await getAllTeacher();
     console.log("🚀 ========= result:", result?.data);
     setTeacherList(result?.data);
   };
+
   const getSemesterList = async () => {
     const result = await getAllSemester();
     setSemesterList(result?.data);
   };
+
+  const getClassDetailById = async () => {
+    try {
+      const result = await getClassDetail(id);
+      console.log("🚀 ========= result1234:", result?.data);
+      setClassDetail(result?.data);
+    } catch (error) {
+      console.log("🚀 ========= error:", error);
+    }
+  };
+
   useEffect(() => {
     getSubjectList();
     getTeacherList();
     getSemesterList();
+    getClassDetailById();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleUpdateDetailClass = async (e) => {
     e.preventDefault();
-    await createClass(formData);
+    const result = await updateClass(id, formData);
+    console.log("🚀 ========= result1111:", result);
     toast.success("Create successfully !", {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
   return (
-    <form onSubmit={handleSubmit} className="container">
+    <form onSubmit={handleUpdateDetailClass}>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">
-          Class name
+          Class Detail
         </label>
         <input
           type="text"
           className="form-control"
           id="class_name"
           name="class_name"
-          value={formData.class_name}
+          defaultValue={classDetail?.class_name}
           onChange={handleInputChange}
         />
       </div>
@@ -67,15 +77,17 @@ export default function CreateClass() {
         <label>Subject</label>
         <select
           name="subject_id"
-          value={formData.subject_id}
           onChange={handleInputChange}
+          defaultValue={classDetail?.Subject?.subject_id}
           required
         >
-          <option value="" className="btn btn-primary">
-            Subject
-          </option>
           {subjectList?.map((subject) => (
-            <option key={subject?.subject_id} value={subject?.subject_id}>
+            <option
+              defaultValue={classDetail?.Subject?.subject_id}
+              value={subject?.subject_id} // Sử dụng subject_id thay vì subject_code
+              key={subject?.subject_id}
+            >
+              {console.log("a", classDetail?.Subject?.subject_id)}
               {subject?.subject_code}
             </option>
           ))}
@@ -83,17 +95,12 @@ export default function CreateClass() {
       </div>
       <div className="form-group">
         <label>Teacher</label>
-        <select
-          name="teacher_id"
-          value={formData.teacher_id}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="" className="btn btn-primary">
-            Choose Teacher
-          </option>
+        <select name="teacher_id" onChange={handleInputChange} required>
           {teacherList?.map((teacher) => (
-            <option key={teacher?.user_id} value={teacher?.user_id}>
+            <option
+              defaultValue={classDetail?.Teacher?.full_name}
+              key={teacher?.user_id}
+            >
               {teacher?.full_name}
             </option>
           ))}
@@ -101,24 +108,19 @@ export default function CreateClass() {
       </div>
       <div className="form-group">
         <label>Semester</label>
-        <select
-          name="semester_id"
-          value={formData.semester_id}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="" className="btn btn-primary">
-            Choose Semester
-          </option>
+        <select name="semester_id" onChange={handleInputChange} required>
           {semesterList?.map((semester) => (
-            <option key={semester?.semester_id} value={semester?.semester_id}>
-              {semester?.semester_name}
+            <option
+              defaultValue={classDetail?.Semester?.semester_id}
+              key={semester?.semester_id}
+            >
+              {semester?.semester_id}
             </option>
           ))}
         </select>
       </div>
       <button type="submit" className="btn btn-primary">
-        Submit
+        Update
       </button>
     </form>
   );

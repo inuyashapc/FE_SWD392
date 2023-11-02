@@ -1,16 +1,16 @@
-import { async } from "q";
 import React, { useEffect, useState } from "react";
-import { getAllMilestone } from "../Services/Milestone.service";
+import { getAllMilestoneById } from "../../Services/Milestone.service";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-import { Tabs } from "antd";
 
-export default function MilestoneList() {
+export default function MilestoneListByProject({ id }) {
+  console.log("🚀 ========= id1234:", id);
   const [milestoneList, setMilestoneList] = useState();
-  const getAllMilestones = async () => {
+
+  const getAllMilestoneByClassId = async () => {
     try {
-      const result = await getAllMilestone();
-      console.log("🚀 ========= result:", result?.data);
+      const result = await getAllMilestoneById(id);
+      console.log("🚀 ========= result1111:", result?.data);
       setMilestoneList(result?.data);
     } catch (error) {
       console.log("🚀 ========= error:", error);
@@ -18,18 +18,16 @@ export default function MilestoneList() {
   };
 
   useEffect(() => {
-    getAllMilestones();
+    getAllMilestoneByClassId();
   }, []);
 
-  
-  
   return (
     <div className="container">
       <h4>Milestone List</h4>
       <Link to={"create"} className="btn btn-primary">
         Create milestone
       </Link>
-      
+
       <table className="table">
         <thead>
           <tr>
@@ -49,7 +47,7 @@ export default function MilestoneList() {
             <tr key={milestone?.milestone_id}>
               <th scope="row">{milestone?.milestone_id}</th>
               <td>
-                <Link to={`${milestone?.milestone_id}`}>
+                <Link to={`/milestoneList/${milestone?.milestone_id}`}>
                   {milestone?.milestone_name}
                 </Link>
               </td>

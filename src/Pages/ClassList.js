@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { getAllSubject } from "../Services/Subject.service";
-import { getAllClass } from "../Services/Class.service";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { Button } from "antd";
+
+import { getAllSubject } from "../Services/Subject.service";
+import { changeStatus, getAllClass } from "../Services/Class.service";
+
 export default function ClassList() {
   const [subjectList, setSubjectList] = useState();
   const [classList, setClassList] = useState();
@@ -18,13 +21,20 @@ export default function ClassList() {
     setClassList(result?.data);
   };
 
+  const changeStatusClass = async (id) => {
+    const result = await changeStatus(id);
+    console.log("🚀 ========= result:", result);
+    getClassList();
+  };
+
   useEffect(() => {
     getSubjectList();
     getClassList();
   }, []);
+
   const handleSearch = () => {};
   return (
-    <div>
+    <div className="container">
       <h4>Class List</h4>
       <div>
         <input
@@ -37,32 +47,9 @@ export default function ClassList() {
           Search
         </button>
       </div>
-      <div className="d-flex justify-content-around">
-        <div className="d-flex align-items-center">
-          <h6 className="mr-2">Semester</h6>
-          <DropdownButton id="dropdown-basic-button" title="Semester">
-            {subjectList?.map((subject) => (
-              <Dropdown.Item key={subject?.subject_id} href="#/action-1">
-                {subject?.subject_code}
-              </Dropdown.Item>
-            ))}
-          </DropdownButton>
-        </div>
-        <div className="d-flex align-items-center">
-          <h6 className="mr-2">Major</h6>
-          <DropdownButton id="dropdown-basic-button" title="Major">
-            <Dropdown.Item href="#/action-1">Action 1</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Action 2</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Action 3</Dropdown.Item>
-          </DropdownButton>
-        </div>
-        <div>
-          <Link to={"create"} className="btn btn-primary">
-            Create class
-          </Link>
-        </div>
-      </div>
-
+      <Link to={"create"} className="btn btn-primary">
+        Create class
+      </Link>
       <table className="table">
         <thead>
           <tr>
@@ -73,20 +60,35 @@ export default function ClassList() {
             <th scope="col">Created At</th>
             <th scope="col">Semester</th>
             <th scope="col">Teacher</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           {classList?.map((item) => (
             <tr key={item?.class_id}>
               <th scope="row">{item?.class_id}</th>
-              <td>{item?.class_name}</td>
-              <td className="text-success">
+              <td>
+                <Link to={`${item?.class_id}`}>{item?.class_name}</Link>
+              </td>
+              <td
+                className={`${
+                  item?.class_status ? "text-success" : "text-danger"
+                }`}
+              >
                 {item?.class_status ? "Active" : "UnActive"}
               </td>
               <td>{item?.Subject?.subject_code}</td>
               <td>{dayjs(item?.created_at).format("DD-MM-YYYY")}</td>
               <td>{item?.Semester?.semester_name}</td>
               <td>{item?.Teacher?.full_name}</td>
+              <td>
+                <Button
+                  type="primary"
+                  onClick={() => changeStatusClass(item?.class_id)}
+                >
+                  Change status
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>

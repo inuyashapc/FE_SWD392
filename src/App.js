@@ -1,14 +1,19 @@
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import ClassList from "./Pages/ClassList";
 import Home from "./Pages/Home";
-import "./App.css";
 import CreateClass from "./Pages/CreateClass";
 import SubjectList from "./Pages/SubjectList";
-import "react-toastify/dist/ReactToastify.css";
 import ClassDetail from "./Pages/ClassDetail";
-import IssueList from "./Pages/Issues/IssueList.js"
+import IssueList from "./Pages/Issues/IssueList.js";
 import NewIssue from "./Pages/Issues/NewIssue.js";
+import MilestoneList from "./Pages/MilestoneList";
+import MilestoneDetail from "./Pages/MilestoneDetail";
+import CreateMilestone from "./Pages/Milestones/CreateMilestone";
+
+import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <Router>
@@ -20,6 +25,13 @@ function App() {
         <Route path="/classList/:id" element={<ClassDetail />}></Route>
         <Route path="/issue" element={<IssueList />}></Route>
         <Route path="/issue/create" element={<NewIssue />}></Route>
+        <Route path="/milestoneList" element={<MilestoneList />}></Route>
+        <Route path="/milestoneList/:id" element={<MilestoneDetail />}></Route>
+        <Route
+          path="/milestoneList/create"
+          element={<CreateMilestone />}
+        ></Route>
+        <Route path="/milestoneList/:id" element={<MilestoneList />}></Route>
       </Routes>
       <ToastContainer />
     </Router>
