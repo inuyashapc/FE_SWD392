@@ -29,4 +29,24 @@ const getClassDetail = async (id) => {
     console.log("🚀 ========= error:", error);
   }
 };
-export { getAllClass, createClass, getClassDetail };
+
+const updateClass = async (id, data) => {
+  console.log("🚀 ========= data:", data);
+  console.log("api", `${API_BASE}/${id}`);
+  try {
+    const result = await axios.put(`${API_BASE}/${id}`, data);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
+
+const changeStatus = async (id) => {
+  try {
+    const result = await axios.put(`${API_BASE}/changeStatus/${id}`);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
+export { getAllClass, createClass, getClassDetail, updateClass, changeStatus };
