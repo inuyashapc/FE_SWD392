@@ -1,12 +1,111 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button, Card, Col, Modal, Row, Table } from "react-bootstrap";
-import { Form } from "react-router-dom";
-
+import SubjectListModalShow from "../Components/SubjectListComponent/SubjectListModalShow.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrash,
+  faEye,
+  faPencilAlt,
+  faTimesCircle,
+  faSortUp,
+  faSortDown,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  changeActiveSubject,
+  getAllSubject,
+  getSubjectById,
+  softDeleteSubject,
+} from "../Services/Subject.service.js";
 const SubjectList = () => {
   const [showModal, setShowModal] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const [subjectData, setSubjectData] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+  const [sortColumn, setSortColumn] = useState('subject_id');
+  const [sortDirection, setSortDirection] = useState('asc');
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await getAllSubject(sortColumn,sortDirection);
+        setSubjects(response);
+      } catch (error) {
+        console.error("Lỗi:", error);
+      }
+    }
+    fetchData();
+  }, [sortColumn,sortDirection]);
+
+  const columns = [
+    { field: 'subject_id', label: 'ID', sortable: true  },
+    { field: 'subject_code', label: 'Code', sortable: true },
+    { field: 'subject_name', label: 'Name', sortable: true },
+    { field: 'subject_description', label: 'Description', sortable: true },
+    { field: 'manager_id', label: 'Manager', sortable: true  },
+    { field: 'isActived', label: 'Status' , sortable: true },
+    { field: 'action', label: 'Action' }
+  ];
+  const handleSort = (field) => {
+    if (field === sortColumn) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const handleClickIconEye = async (subject_id) => {
+    try {
+      setIsEditing(false)
+      const data = await getSubjectById(subject_id);
+      setSubjectData(data);
+      handleShowModal();
+      console.log(subject_id);
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  };
+  const handleClickIconEdit = async (subject_id) => {
+    try {
+      setIsEditing(true)
+      const data = await getSubjectById(subject_id);
+      setSubjectData(data);
+      handleShowModal();
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  };
+  const handleClickIconChangeActiveStatus = async (subject_id) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to change the active status"
+      );
+      if (confirm) {
+        const data = await changeActiveSubject(subject_id, sortColumn, sortDirection);
+        setSubjects(data);
+      }
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
+  };
+  const handleClickIconSoftDelete = async (subject_id) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to soft delete this"
+      );
+      if (confirm) {
+        const data = await softDeleteSubject(subject_id, sortColumn, sortDirection);
+        setSubjects(data);
+      }
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
   };
   return (
     <div className="container border-0" style={{ marginTop: "17px" }}>
@@ -40,7 +139,7 @@ const SubjectList = () => {
             <Col sm={4}></Col>
             <Col sm={4} className="m-2">
               <div className="d-flex">
-                <Button
+                <input
                   type="search"
                   placeholder="Search"
                   className="me-2"
@@ -58,18 +157,67 @@ const SubjectList = () => {
         </Card.Header>
         <Card.Body>
           <div className="scrollable-area" style={{ overflow: "auto" }}>
-            <Table bordered hover>
+            <Table bordered>
               <thead>
-                <tr>
-                  <th style={{ cursor: "pointer"}}>ID</th>
-                  <th>Code</th>
-                  <th style={{ cursor: "pointer" }}>Description</th>
-                  <th>Manager</th>
-                  <th>Action</th>
+                <tr style={{textAlign:'center'}}>
+                {columns.map((column) => (
+                  <th key={column.field} onClick={column.sortable ? () => handleSort(column.field) : null} style={{ width:`${column.field == 'action' ? '18%' : ''}`}}>
+                    <div className={`d-flex ${column.sortable ? '' : 'flex-column'} justify-content-between align-items-center`}>
+                      <span>{column.label}</span>
+                      {column.sortable && (
+                        <FontAwesomeIcon icon={sortColumn === column.field  && sortDirection ==='asc'? faSortUp : faSortDown } style={{paddingRight:'1px'}}/>
+                      )}
+                      </div>
+                  </th>
+                ))}
                 </tr>
               </thead>
               <tbody>
-
+                {subjects.map((subject) => (
+                  <tr
+                    key={subject.subject_id}
+                    className={subject.isActived ? "actived" : "inactived"}
+                  >
+                    <td>{subject.subject_id}</td>
+                    <td>{subject.subject_code}</td>
+                    <td>{subject.subject_name}</td>
+                    <td>{subject.subject_description}</td>
+                    <td>{subject.Manager.full_name}</td>
+                    <td>{subject.isActived ? "Actived" : "InActived"}</td>
+                    <td
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => handleClickIconEye(subject.subject_id)}
+                      />
+                      <FontAwesomeIcon
+                        icon={faPencilAlt}
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => handleClickIconEdit(subject.subject_id)}
+                      />
+                      <FontAwesomeIcon
+                        icon={faTimesCircle}
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) =>
+                          handleClickIconChangeActiveStatus(subject.subject_id)
+                        }
+                      />
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) =>
+                          handleClickIconSoftDelete(subject.subject_id)
+                        }
+                      />
+                      
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           </div>
@@ -83,322 +231,25 @@ const SubjectList = () => {
       </Card>
 
       <Modal show={showModal} onHide={handleCloseModal}>
-        {/* <Form onSubmit={handleSubmit} onKeyDown={handleKeyDown}> */}
-        {/* <Form>
-              <Modal.Header closeButton>
-                <Modal.Title>
-                  {isEditing
-                    ? `Chỉnh sửa sản phẩm (ID:${updateProduct.id})`
-                    : "Thêm mới sản phẩm"}
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text id="basic-addon1">Tên</InputGroup.Text>
-                  <Form.Control
-                    placeholder="Product Name"
-                    aria-label="product_name"
-                    aria-describedby="basic-addon1"
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            name: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            name: e.target.value,
-                          }));
-                    }}
-                    defaultValue={isEditing ? updateProduct.name : ""}
-                    required
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text id="basic-addon1">Giá</InputGroup.Text>
-                  <Form.Control
-                    placeholder="Price"
-                    aria-label="product_price"
-                    aria-describedby="basic-addon3"
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            price: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            price: e.target.value,
-                          }));
-                    }}
-                    defaultValue={isEditing ? updateProduct.price : ""}
-                    required
-                  />
-                  <InputGroup.Text>đ</InputGroup.Text>
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <Dropdown>
-                    <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                      Category
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      {categories.map((category, index) => (
-                        <Dropdown.Item
-                          key={index}
-                          onClick={() => {
-                            setNewProductAdd((prevProduct) => ({
-                              ...prevProduct,
-                              catId: category.id,
-                            }));
-                          }}
-                        >
-                          {`${category.name} (${category.id})`}
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Form.Control
-                    placeholder={isEditing ? updateProduct.catId : "Category"}
-                    aria-label="product_category"
-                    aria-describedby="basic-addon3"
-                    defaultValue={isEditing ? updateProduct.catId : ""}
-                    value={newProductAdded.catId ? newProductAdded.catId : ""}
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            catId: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            catId: e.target.value,
-                          }));
-                    }}
-                    required
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text>Description</InputGroup.Text>
-                  <Form.Control
-                    placeholder="Description"
-                    as="textarea"
-                    aria-label="With textarea"
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            description: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            description: e.target.value,
-                          }));
-                    }}
-                    defaultValue={isEditing ? updateProduct.description : ""}
-                    required
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <DropdownButton
-                    variant="outline-secondary"
-                    title="Size"
-                    id="input-group-dropdown-1"
-                  >
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        setNewProductAdd((prevProduct) => ({
-                          ...prevProduct,
-                          size: SIZE_KEY.shirts,
-                        }));
-                      }}
-                    >
-                      Áo
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        setNewProductAdd((prevProduct) => ({
-                          ...prevProduct,
-                          size: SIZE_KEY.pants,
-                        }));
-                      }}
-                    >
-                      Quần
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={(e) => {
-                        setNewProductAdd((prevProduct) => ({
-                          ...prevProduct,
-                          size: SIZE_KEY.shoes,
-                        }));
-                      }}
-                    >
-                      Giầy/Dép
-                    </Dropdown.Item>
-                  </DropdownButton>
-                  <Form.Control
-                    placeholder={
-                      isEditing ? updateProduct.size : "Separated by commas"
-                    }
-                    aria-label="product_category"
-                    defaultValue={isEditing ? updateProduct.size : ""}
-                    value={newProductAdded.size ? newProductAdded.size : ""}
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            size: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            size: e.target.value,
-                          }));
-                    }}
-                    required
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text>Color</InputGroup.Text>
-                  <Form.Control
-                    placeholder="Separated by commas"
-                    aria-label="product_color"
-                    aria-describedby="basic-addon3"
-                    defaultValue={isEditing ? updateProduct.color : ""}
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            color: e.target.value
-                              ? e.target.value.split(",")
-                              : e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            color: e.target.value
-                              ? e.target.value.split(",")
-                              : e.target.value,
-                          }));
-                    }}
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text>Quantity</InputGroup.Text>
-                  <Form.Control
-                    placeholder="Quantity"
-                    aria-label="product_quantity"
-                    aria-describedby="basic-addon3"
-                    onChange={(e) => {
-                      isEditing
-                        ? setUpdateProduct((prevProduct) => ({
-                            ...prevProduct,
-                            amount: e.target.value,
-                          }))
-                        : setNewProductAdd((prevProduct) => ({
-                            ...prevProduct,
-                            amount: e.target.value,
-                          }));
-                    }}
-                    defaultValue={isEditing ? updateProduct.amount : ""}
-                    required
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text>Image</InputGroup.Text>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      const reader = new FileReader();
-
-                      reader.onloadend = async () => {
-                        const imageDataUrl = reader.result;
-
-                        const formData = new FormData();
-                        formData.append("file", imageDataUrl);
-                        formData.append("upload_preset", `shop_assets`);
-
-                        await uploadImage(formData)
-                          .then((imageUrl) => {
-                            isEditing
-                              ? setUpdateProduct((prevProduct) => ({
-                                  ...prevProduct,
-                                  img: imageUrl,
-                                }))
-                              : setNewProductAdd((prevProduct) => ({
-                                  ...prevProduct,
-                                  img: imageUrl,
-                                }));
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                          });
-                      };
-
-                      if (file) {
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    required
-                  />
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      const reader = new FileReader();
-
-                      reader.onloadend = async () => {
-                        const imageDataUrl = reader.result;
-                        //them anh vao cloudiary
-                        const formData = new FormData();
-                        formData.append("file", imageDataUrl);
-                        formData.append("upload_preset", `shop_assets`);
-
-                        await uploadImage(formData)
-                          .then((imageUrl) => {
-                            isEditing
-                              ? setUpdateProduct((prevProduct) => ({
-                                  ...prevProduct,
-                                  blurImg: imageUrl,
-                                }))
-                              : setNewProductAdd((prevProduct) => ({
-                                  ...prevProduct,
-                                  blurImg: imageUrl,
-                                }));
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                          });
-                      };
-
-                      if (file) {
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    required
-                  />
-                </InputGroup>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Close
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  onClick={
-                    isEditing
-                      ? () => {
-                          handleClickSaveEdit(updateProduct.id);
-                        }
-                      : () => {}
-                  }
-                >
-                  Save Changes
-                </Button>
-              </Modal.Footer>
-            </Form> */}
+        <Modal.Header closeButton>
+          <Modal.Title>Subject Detail</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <SubjectListModalShow
+              subjectData={subjectData}
+              isEditing={isEditing}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseModal}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
