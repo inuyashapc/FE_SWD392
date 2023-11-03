@@ -17,13 +17,11 @@ export default function ClassList() {
   };
   const getClassList = async () => {
     const result = await getAllClass();
-    console.log("🚀 ========= result:", result?.data);
     setClassList(result?.data);
   };
 
   const changeStatusClass = async (id) => {
     const result = await changeStatus(id);
-    console.log("🚀 ========= result:", result);
     getClassList();
   };
 

@@ -1,16 +1,13 @@
-import { async } from "q";
 import React, { useEffect, useState } from "react";
 import { getAllMilestone } from "../Services/Milestone.service";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-import { Tabs } from "antd";
 
 export default function MilestoneList() {
   const [milestoneList, setMilestoneList] = useState();
   const getAllMilestones = async () => {
     try {
       const result = await getAllMilestone();
-      console.log("🚀 ========= result:", result?.data);
       setMilestoneList(result?.data);
     } catch (error) {
       console.log("🚀 ========= error:", error);
@@ -21,15 +18,13 @@ export default function MilestoneList() {
     getAllMilestones();
   }, []);
 
-  
-  
   return (
     <div className="container">
       <h4>Milestone List</h4>
       <Link to={"create"} className="btn btn-primary">
         Create milestone
       </Link>
-      
+
       <table className="table">
         <thead>
           <tr>

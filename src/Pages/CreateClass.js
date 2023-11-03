@@ -28,7 +28,6 @@ export default function CreateClass() {
   };
   const getTeacherList = async () => {
     const result = await getAllTeacher();
-    console.log("🚀 ========= result:", result?.data);
     setTeacherList(result?.data);
   };
   const getSemesterList = async () => {

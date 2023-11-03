@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllSubject } from "../../Services/Subject.service";
+import { getAllSubjects } from "../../Services/Subject.service";
 import { getAllTeacher } from "../../Services/User.service";
 import { getAllSemester } from "../../Services/Semester.service";
 import { getClassDetail, updateClass } from "../../Services/Class.service";
@@ -18,13 +18,12 @@ export default function FormUpdate({ id }) {
   };
 
   const getSubjectList = async () => {
-    const result = await getAllSubject();
-    setSubjectList(result?.data);
+    const result = await getAllSubjects();
+    setSubjectList(result);
   };
 
   const getTeacherList = async () => {
     const result = await getAllTeacher();
-    console.log("🚀 ========= result:", result?.data);
     setTeacherList(result?.data);
   };
 
@@ -36,7 +35,6 @@ export default function FormUpdate({ id }) {
   const getClassDetailById = async () => {
     try {
       const result = await getClassDetail(id);
-      console.log("🚀 ========= result1234:", result?.data);
       setClassDetail(result?.data);
     } catch (error) {
       console.log("🚀 ========= error:", error);
@@ -53,7 +51,6 @@ export default function FormUpdate({ id }) {
   const handleUpdateDetailClass = async (e) => {
     e.preventDefault();
     const result = await updateClass(id, formData);
-    console.log("🚀 ========= result1111:", result);
     toast.success("Create successfully !", {
       position: toast.POSITION.TOP_RIGHT,
     });
