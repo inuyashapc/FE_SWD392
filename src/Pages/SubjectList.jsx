@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Button, Card, Col, Modal, Row, Table } from "react-bootstrap";
-import SubjectListModalShow from "../Components/SubjectListComponent/SubjectListModalShow.jsx";
+import SubjectListModalShow from "../Components/SubjectMgmt/SubjectListModalShow.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
@@ -19,7 +19,7 @@ import {
   softDeleteSubject,
   updateSubject,
 } from "../Services/Subject.service.js";
-import AddNewSubjectModel from "../Components/SubjectListComponent/AddNewSubjectModel.jsx";
+import AddNewSubjectModel from "../Components/SubjectMgmt/AddNewSubjectModel.jsx";
 const SubjectList = () => {
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -138,7 +138,7 @@ const SubjectList = () => {
   const callAllSubject = () => {
     setHandleCallAllSubject(!handleCallAllSubject);
   };
-  const handleSearch = () => {
+  const handleSearch = (e) => {
     alert("Searching...");
   };
   return (
@@ -147,7 +147,7 @@ const SubjectList = () => {
         <Card.Header>
           <Row>
             <Col sm={6}>
-              <h2>Manager Product </h2>
+              <h2>Manager Subject </h2>
             </Col>
             <Col sm={6}>
               <Button variant="info" onClick={() => handleShowAddModal()}>

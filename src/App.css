@@ -5,3 +5,7 @@
  .inactived {
     background-color:red;
  }
+ .custom-modal {
+   background-color: green; 
+   color: #ffffff; 
+ }

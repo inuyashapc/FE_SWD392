@@ -14,12 +14,14 @@ import CreateMilestone from "./Pages/Milestones/CreateMilestone";
 
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
+import IssueSetting from "./Pages/IssueSetting.jsx";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/subjects" element={<SubjectList />} />
+        <Route path="/issueSetting" element={<IssueSetting />} />
         <Route path="/classList" element={<ClassList />}></Route>
         <Route path="/classList/create" element={<CreateClass />}></Route>
         <Route path="/classList/:id" element={<ClassDetail />}></Route>
