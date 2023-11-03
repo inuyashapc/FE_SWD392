@@ -4,13 +4,11 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 
 export default function MilestoneListByProject({ id }) {
-  console.log("🚀 ========= id1234:", id);
   const [milestoneList, setMilestoneList] = useState();
 
   const getAllMilestoneByClassId = async () => {
     try {
       const result = await getAllMilestoneById(id);
-      console.log("🚀 ========= result1111:", result?.data);
       setMilestoneList(result?.data);
     } catch (error) {
       console.log("🚀 ========= error:", error);
