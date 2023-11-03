@@ -9,5 +9,12 @@ const getAllTeacher = async () => {
     console.log("🚀 ========= error:", error);
   }
 };
-
-export { getAllTeacher };
+const getAllManagers = async () => {
+  try {
+    const result = await axios.get(`${API_BASE}/managers`);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+}
+export { getAllTeacher,getAllManagers };

@@ -64,6 +64,15 @@ const softDeleteSubject = async (subject_id, sortColumn, sortOrder) => {
     console.log("🚀 ========= error:", error);
   }
 };
+const updateSubject = async (data)=>{
+  try {
+    const result = await axios.patch(`${API_BASE}/update`, data);
+    return result.data;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+}
+
 
 const getAllSubjects = async () => {
   try {
@@ -72,12 +81,13 @@ const getAllSubjects = async () => {
   } catch (error) {
     console.log("🚀 ========= error:", error);
   }
-};
+}
 export {
   getAllSubject,
   changeActiveSubject,
   softDeleteSubject,
   createNewSubject,
   getSubjectById,
+  updateSubject,
   getAllSubjects,
 };
