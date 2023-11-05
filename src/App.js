@@ -11,10 +11,12 @@ import NewIssue from "./Pages/Issues/NewIssue.js";
 import MilestoneList from "./Pages/MilestoneList";
 import MilestoneDetail from "./Pages/MilestoneDetail";
 import CreateMilestone from "./Pages/Milestones/CreateMilestone";
-
+import SignIn from "./Pages/Login/SignIn.jsx";
+import SignUp from "./Pages/Register/SignUp.jsx";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import IssueSetting from "./Pages/IssueSetting.jsx";
+
 function App() {
   return (
     <Router>
@@ -29,6 +31,10 @@ function App() {
         <Route path="/issue/create" element={<NewIssue />}></Route>
         <Route path="/milestoneList" element={<MilestoneList />}></Route>
         <Route path="/milestoneList/:id" element={<MilestoneDetail />}></Route>
+        <Route path="/login" element={<SignIn />}></Route>
+        <Route path="/register" element={<SignUp />}></Route>
+
+
         <Route
           path="/milestoneList/create"
           element={<CreateMilestone />}
