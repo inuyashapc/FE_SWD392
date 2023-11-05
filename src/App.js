@@ -33,8 +33,6 @@ function App() {
         <Route path="/milestoneList/:id" element={<MilestoneDetail />}></Route>
         <Route path="/login" element={<SignIn />}></Route>
         <Route path="/register" element={<SignUp />}></Route>
-
-
         <Route
           path="/milestoneList/create"
           element={<CreateMilestone />}

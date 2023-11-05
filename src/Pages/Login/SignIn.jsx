@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -27,15 +27,10 @@ const defaultTheme = createTheme();
 export default function SignInSide() {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
-  const accesstoken = (localStorage.getItem("accessToken"));
   const [loginError, setLoginError] = useState('');
 
 
-  // useEffect(() => {
-  //   if (accesstoken) {
-  //     navigate('/')
-  //   }
-  // }, [accesstoken, navigate])
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();

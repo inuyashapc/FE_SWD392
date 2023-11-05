@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -20,15 +20,7 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
     const navigate = useNavigate();
-    const accesstoken = (localStorage.getItem("accessToken"));
     const [loginError, setLoginError] = useState('');
-
-
-    // useEffect(() => {
-    //     if (accesstoken) {
-    //         navigate('/')
-    //     }
-    // }, [accesstoken, navigate])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -57,7 +49,7 @@ export default function SignUp() {
             if (error.response) {
                 const errors = error.response.data.errors;
                 console.log(errors);
-                setLoginError('Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.');
+                setLoginError('Đăng kí thất bại. Vui lòng kiểm tra email và mật khẩu.');
             }
         }
     };
@@ -74,7 +66,7 @@ export default function SignUp() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://lawnet.vn/uploads/image/2020/06/02/021956527.jpg)',
+                        backgroundImage: 'url(https://samivietnam.com/wp-content/uploads/2019/12/nguyen-tac-sd-hinh-anh3.jpg)',
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
