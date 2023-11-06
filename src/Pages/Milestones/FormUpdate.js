@@ -35,6 +35,7 @@ export default function FormUpdate({ id }) {
   const getClassDetailById = async () => {
     try {
       const result = await getClassDetail(id);
+      console.log("🚀 ========= result:", result);
       setClassDetail(result?.data);
     } catch (error) {
       console.log("🚀 ========= error:", error);
@@ -84,7 +85,6 @@ export default function FormUpdate({ id }) {
               value={subject?.subject_id} // Sử dụng subject_id thay vì subject_code
               key={subject?.subject_id}
             >
-              {console.log("a", classDetail?.Subject?.subject_id)}
               {subject?.subject_code}
             </option>
           ))}

@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useParams } from "react-router";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
   getDetailMilestone,
   updateMilestone,
 } from "../Services/Milestone.service";
-import dayjs from "dayjs";
-
 export default function MilestoneDetail() {
   const [milestoneDetail, setMilestoneDetail] = useState();
   console.log("🚀 ========= milestoneDetail:", milestoneDetail);
   const [formData, setFormData] = useState();
-  console.log("🚀 ========= formData:", formData);
+  console.log("🚀 ========= formData:", formData) ;
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const getMilestoneDetail = async () => {
     try {
       const result = await getDetailMilestone(id);
@@ -28,6 +29,16 @@ export default function MilestoneDetail() {
     e.preventDefault();
     try {
       const result = await updateMilestone(id, formData);
+      if (result) {
+        toast.success("Update successfully !", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        navigate(`/classList/${id}`);
+      } else {
+        toast.warning("Update do not successfully !", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
     } catch (error) {
       console.log("🚀 ========= error:", error);
     }
@@ -86,9 +97,7 @@ export default function MilestoneDetail() {
             type="date"
             id="start_date"
             name="start_date"
-            defaultValue={dayjs(milestoneDetail?.start_date).format(
-              "YYYY-MM-DD"
-            )}
+            value={dayjs(milestoneDetail?.start_date).format("YYYY-MM-DD")}
             onChange={handleInputChange}
           />
         </Form.Group>
@@ -98,7 +107,7 @@ export default function MilestoneDetail() {
             type="date"
             id="end_date"
             name="end_date"
-            defaultValue={dayjs(milestoneDetail?.end_date).format("YYYY-MM-DD")}
+            value={dayjs(milestoneDetail?.end_date).format("YYYY-MM-DD")}
             onChange={handleInputChange}
           />
         </Form.Group>
