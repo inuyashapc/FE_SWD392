@@ -4,6 +4,7 @@ import { getAllTeacher } from "../../Services/User.service";
 import { getAllSemester } from "../../Services/Semester.service";
 import { getClassDetail, updateClass } from "../../Services/Class.service";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function FormUpdate({ id }) {
   const [subjectList, setSubjectList] = useState();
   const [teacherList, setTeacherList] = useState();
@@ -11,7 +12,7 @@ export default function FormUpdate({ id }) {
   const [classDetail, setClassDetail] = useState();
   const [formData, setFormData] = useState();
   console.log("🚀 ========= formData:", formData);
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -52,9 +53,12 @@ export default function FormUpdate({ id }) {
   const handleUpdateDetailClass = async (e) => {
     e.preventDefault();
     const result = await updateClass(id, formData);
-    toast.success("Create successfully !", {
-      position: toast.POSITION.TOP_RIGHT,
-    });
+    if (result) {
+      toast.success("Create successfully !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      navigate("/classList");
+    }
   };
   return (
     <form onSubmit={handleUpdateDetailClass}>
