@@ -5,18 +5,22 @@ import { Link } from "react-router-dom";
 import { Button } from "antd";
 
 import { getAllSubject } from "../Services/Subject.service";
-import { changeStatus, getAllClass } from "../Services/Class.service";
+import {
+  changeStatus,
+  getAllClass,
+  getAllClassSearch,
+} from "../Services/Class.service";
 
 export default function ClassList() {
   const [subjectList, setSubjectList] = useState();
   const [classList, setClassList] = useState();
-
+  const [search, setSearch] = useState("");
   const getSubjectList = async () => {
     const result = await getAllSubject();
     setSubjectList(result?.data);
   };
   const getClassList = async () => {
-    const result = await getAllClass();
+    const result = await getAllClassSearch(search);
     setClassList(result?.data);
   };
 
@@ -28,7 +32,7 @@ export default function ClassList() {
   useEffect(() => {
     getSubjectList();
     getClassList();
-  }, []);
+  }, [search]);
 
   const handleSearch = () => {};
   return (
@@ -37,9 +41,10 @@ export default function ClassList() {
       <div>
         <input
           type="text"
+          name="search"
           placeholder="Search..."
           // value={searchTerm}
-          // onChange={handleInputChange}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <button className="btn btn-primary" onClick={handleSearch}>
           Search

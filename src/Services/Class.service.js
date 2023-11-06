@@ -44,4 +44,21 @@ const changeStatus = async (id) => {
     console.log("🚀 ========= error:", error);
   }
 };
-export { getAllClass, createClass, getClassDetail, updateClass, changeStatus };
+const getAllClassSearch = async (search) => {
+  console.log("🚀 ========= search:", search);
+  try {
+    const result = await axios.post(`${API_BASE}/search`, { search: search });
+    console.log("🚀 ========= result:", result);
+    return result;
+  } catch (error) {
+    console.log("🚀 ========= error:", error);
+  }
+};
+export {
+  getAllClass,
+  createClass,
+  getClassDetail,
+  updateClass,
+  changeStatus,
+  getAllClassSearch,
+};

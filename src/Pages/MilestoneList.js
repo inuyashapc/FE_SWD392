@@ -58,7 +58,7 @@ export default function MilestoneList() {
             <tr key={milestone?.milestone_id}>
               <th scope="row">{milestone?.milestone_id}</th>
               <td>
-                <Link to={`${milestone?.milestone_id}`}>
+                <Link to={`/milestoneList/${milestone?.milestone_id}`}>
                   {milestone?.milestone_name}
                 </Link>
               </td>

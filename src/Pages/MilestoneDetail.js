@@ -12,7 +12,7 @@ export default function MilestoneDetail() {
   const [milestoneDetail, setMilestoneDetail] = useState();
   console.log("🚀 ========= milestoneDetail:", milestoneDetail);
   const [formData, setFormData] = useState();
-  console.log("🚀 ========= formData:", formData) ;
+  console.log("🚀 ========= formData:", formData);
   const { id } = useParams();
   const navigate = useNavigate();
   const getMilestoneDetail = async () => {
@@ -33,7 +33,7 @@ export default function MilestoneDetail() {
         toast.success("Update successfully !", {
           position: toast.POSITION.TOP_RIGHT,
         });
-        navigate(`/classList/${id}`);
+        window.history.back();
       } else {
         toast.warning("Update do not successfully !", {
           position: toast.POSITION.TOP_RIGHT,
