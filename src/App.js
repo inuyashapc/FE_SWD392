@@ -8,6 +8,8 @@ import SubjectList from "./Pages/SubjectList";
 import ClassDetail from "./Pages/ClassDetail";
 import IssueList from "./Pages/Issues/IssueList.js";
 import NewIssue from "./Pages/Issues/NewIssue.js";
+import IssueDetail from "./Pages/Issues/IssueDetail.js"
+import UpdateBatch from "./Pages/Issues/UpdateBatch.js"
 import MilestoneList from "./Pages/MilestoneList";
 import MilestoneDetail from "./Pages/MilestoneDetail";
 import CreateMilestone from "./Pages/Milestones/CreateMilestone";
@@ -33,6 +35,8 @@ function App() {
         <Route path="/classList/:id" element={<ClassDetail />}></Route>
         <Route path="/issue" element={<IssueList />}></Route>
         <Route path="/issue/create" element={<NewIssue />}></Route>
+        <Route path="/issue/:id" element={<IssueDetail />}></Route>
+        <Route path="/issue/edit/:id" element={<UpdateBatch />}></Route>
         <Route path="/milestoneList" element={<MilestoneList />}></Route>
         <Route path="/milestoneList/:id" element={<MilestoneDetail />}></Route>
         <Route path="/login" element={<SignIn />}></Route>
