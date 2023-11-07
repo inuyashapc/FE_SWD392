@@ -16,7 +16,11 @@ import SignUp from "./Pages/Register/SignUp.jsx";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import IssueSetting from "./Pages/IssueSetting.jsx";
-
+import Project from "./Pages/ProjectList"
+import CreateProject from "./Pages/CreateProject";
+import ProjectMemberList from "./Pages/ProjectMemberList";
+import SystemSettingList from "./Pages/SystemSettingList"
+import UpdateProject from "./Pages/UpdateProject.js";
 function App() {
   return (
     <Router>
@@ -38,6 +42,13 @@ function App() {
           element={<CreateMilestone />}
         ></Route>
         <Route path="/milestoneList/:id" element={<MilestoneList />}></Route>
+        
+        <Route path="/projectList" element={<Project />}></Route>
+        <Route path="/projectList/create" element={<CreateProject />}></Route>
+        <Route path="/projectList/members" element={<ProjectMemberList />}></Route>
+        <Route path="/projectList/update" element={<UpdateProject />}></Route>
+        <Route path="/systemSetting" element={<SystemSettingList />}></Route>
+
       </Routes>
       <ToastContainer />
     </Router>
